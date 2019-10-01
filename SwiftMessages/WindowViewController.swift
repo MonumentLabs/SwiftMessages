@@ -21,14 +21,14 @@ open class WindowViewController: UIViewController
     
     public init(windowLevel: UIWindow.Level?, config: SwiftMessages.Config)
     {
-        self.windowLevel = windowLevel ?? UIWindow.Level.normal
+        self.windowLevel = windowLevel ?? UIWindowLevelNormal
         self.config = config
         let window = PassthroughWindow(frame: UIScreen.main.bounds)
         self.window = window
         super.init(nibName: nil, bundle: nil)
         self.view = PassthroughView()
         window.rootViewController = self
-        window.windowLevel = windowLevel ?? UIWindow.Level.normal
+        window.windowLevel = windowLevel ?? UIWindowLevelNormal
     }
     
     func install(becomeKey: Bool) {

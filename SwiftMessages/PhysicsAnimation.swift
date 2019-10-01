@@ -32,7 +32,7 @@ public class PhysicsAnimation: NSObject, Animator {
     }
 
     public func show(context: AnimationContext, completion: @escaping AnimationCompletion) {
-        NotificationCenter.default.addObserver(self, selector: #selector(adjustMargins), name: UIDevice.orientationDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(adjustMargins), name: .UIDeviceOrientationDidChange, object: nil)
         install(context: context)
         showAnimation(context: context, completion: completion)
     }

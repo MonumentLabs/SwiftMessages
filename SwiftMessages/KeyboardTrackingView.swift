@@ -65,11 +65,11 @@ open class KeyboardTrackingView: UIView {
         translatesAutoresizingMaskIntoConstraints = false
         heightConstraint = heightAnchor.constraint(equalToConstant: 0)
         heightConstraint.isActive = true
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(pause), name: UIApplication.willResignActiveNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(resume), name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: .UIKeyboardWillChangeFrame, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: .UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(pause), name: .UIApplicationWillResignActive, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(resume), name: .UIApplicationDidBecomeActive, object: nil)
         backgroundColor = .clear
     }
 
@@ -100,7 +100,7 @@ open class KeyboardTrackingView: UIView {
     private func show(change: Change, _ notification: Notification) {
         guard !(isPaused || isAutomaticallyPaused),
             let userInfo = (notification as NSNotification).userInfo,
-            let value = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+            let value = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
         let keyboardRect = value.cgRectValue
         let thisRect = convert(bounds, to: nil)
         let newHeight = max(0, thisRect.maxY - keyboardRect.minY) + topMargin
@@ -111,8 +111,8 @@ open class KeyboardTrackingView: UIView {
 
     private func animateKeyboardChange(change: Change, height: CGFloat, userInfo: [AnyHashable: Any]) {
         self.heightConstraint.constant = height
-        if let durationNumber = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber,
-            let curveNumber = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber {
+        if let durationNumber = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber,
+            let curveNumber = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber {
             CATransaction.begin()
             CATransaction.setCompletionBlock {
                 self.delegate?.keyboardTrackingViewDidChange(change: change, userInfo: userInfo)
